@@ -492,14 +492,14 @@
     else { const f = $('#fb .fb'); f.className = 'fb ' + cls; $('.h', f).textContent = title + ' — 모범 답안'; }
     const prev = record(q.id, res === 'partial' ? 'hint' : res);
     const entry = { q, res, ans: c.ans }; S.res.push(entry);
-    c.retryPushed = res === 'wrong' && !c.it.retry;
-    if (c.retryPushed) S.queue.push({ q: c.it.q, retry: true });
+    c.retryEntry = (res === 'wrong' || res === 'partial') && !c.it.retry ? { q: c.it.q, retry: true } : null; // partial (△) also comes back
+    if (c.retryEntry) S.queue.push(c.retryEntry);
     setCtl('<button class="primary" id="next">다음 (Enter)</button>' + (res !== 'ok' ? '<button id="mark">맞음으로 처리</button>' : '') + `<button id="excl">${P.archive[q.id] ? '제외 취소' : '시험에 안 나옴 (제외)'}</button>`);
     $('#next').onclick = () => { S.i++; nextCard(); }; $('#next').focus();
     const mark = $('#mark');
     if (mark) mark.onclick = () => { // typo / synonym: count it as correct
       undoRecord(q.id, prev); record(q.id, 'ok'); entry.res = 'ok';
-      if (c.retryPushed) { S.queue.pop(); c.retryPushed = false; }
+      if (c.retryEntry) { const k = S.queue.indexOf(c.retryEntry); if (k >= 0) S.queue.splice(k, 1); c.retryEntry = null; } // not pop(): 제외 may have already removed it
       const f = $('#fb .fb'); f.className = 'fb ok'; $('.h', f).textContent = '✓ 맞음으로 처리됨'; mark.remove();
     };
     $('#excl').onclick = () => { // not on the exam: drop from all pools
