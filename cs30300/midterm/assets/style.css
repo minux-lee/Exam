@@ -39,6 +39,8 @@ button:disabled{opacity:.45;cursor:default}
 .q code,.fb code,td code{font-family:var(--mono);background:var(--code);padding:1px 5px;border-radius:4px;font-size:.88em}
 pre{font-family:var(--mono);font-size:.84rem;line-height:1.5;background:var(--code);border-radius:8px;padding:10px 12px;overflow-x:auto;margin:8px 0;white-space:pre}
 pre code{background:none;padding:0}
+.steps{margin:10px 0;padding:8px 14px;border-left:3px solid var(--accent);background:var(--code);border-radius:0 8px 8px 0;line-height:1.7;font-size:.95rem;overflow-wrap:anywhere}
+.steps>div+div{margin-top:4px}
 .cloze{line-height:2.3;font-size:1.04rem}
 input.blank{font-family:var(--mono);font-size:.92rem;color:var(--ink);background:var(--code);border:none;border-bottom:2px solid var(--line);border-radius:4px 4px 0 0;padding:2px 8px;margin:0 2px;text-align:center;max-width:100%}
 input.blank:focus{border-bottom-color:var(--accent)}

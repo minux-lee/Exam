@@ -21,6 +21,7 @@
   /* ---------- text helpers ---------- */
   const esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
   const inl = t => esc(t).replace(/`([^`]+)`/g, '<code>$1</code>').replace(/\*\*([^*]+)\*\*/g, '<b>$1</b>').replace(/\n/g, '<br>');
+  const stepsBox = t => t ? '<div class="steps">' + String(t).split('\n').filter(l => l.trim()).map(l => '<div>' + inl(l.trim()) + '</div>').join('') + '</div>' : '';
   function fmt(s) {
     s = String(s == null ? '' : s); const out = []; const re = /```(\w*)\n([\s\S]*?)```/g; let last = 0, m;
     while ((m = re.exec(s))) { out.push(inl(s.slice(last, m.index))); out.push('<pre><code>' + esc(m[2].replace(/\n$/, '')) + '</code></pre>'); last = re.lastIndex; }
@@ -134,7 +135,7 @@
     restore: (q, el, ans) => { $('input.line', el).value = ans || ''; },
     grade(q, ans) { const r = QZ.checkCalc(q, ans); return { res: r.ok ? 'ok' : 'wrong', pts: r.ok ? 1 : 0 }; },
     reveal(q, el, ans, g) { const i = $('input.line', el); i.classList.add(g.res === 'ok' ? 'ok' : 'bad'); i.readOnly = true; },
-    solution: q => `<b>정답: ${esc(QZ.fmtAns(q))}</b><pre><code>${esc(q.steps || '')}</code></pre>`,
+    solution: q => `<b>정답: ${esc(QZ.fmtAns(q))}</b>${stepsBox(q.steps)}`,
   };
 
   H.short = {
@@ -287,7 +288,7 @@
     reveal(q, el, ans, g) {
       $$('input.simin', el).forEach((i, k) => { i.classList.add(g.oks[k] ? 'ok' : 'bad'); i.readOnly = true; const m = $$('.mk2', el)[k]; m.textContent = g.oks[k] ? '✓' : '✗ ' + QZ.fmtAns(q.fields[k]); m.className = 'mk2 ' + (g.oks[k] ? 'ok' : 'bad'); });
     },
-    solution: q => `<b>정답</b><ul class="sol">${q.fields.map(f => `<li>${inl(f.label)}: <b>${esc(QZ.fmtAns(f))}</b></li>`).join('')}</ul><pre><code>${esc(q.steps || '')}</code></pre>`,
+    solution: q => `<b>정답</b><ul class="sol">${q.fields.map(f => `<li>${inl(f.label)}: <b>${esc(QZ.fmtAns(f))}</b></li>`).join('')}</ul>${stepsBox(q.steps)}`,
     hint(q, el) { if (!q.hint) return; const b = $('.hintbox', el); b.hidden = false; b.innerHTML = '💡 ' + fmt(q.hint); },
   };
 
