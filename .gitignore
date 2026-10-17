@@ -1,0 +1,5 @@
+.DS_Store
+node_modules/
+# only built quiz sites belong here; never lecture PDFs, notes, lab code or solutions
+*.pdf
+*.rs

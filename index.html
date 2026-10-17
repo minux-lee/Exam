@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Exam</title>
+<style>
+  :root{--bg:#fff;--fg:#1f2328;--mut:#656d76;--bd:#d0d7de;--ac:#0969da}
+  @media (prefers-color-scheme:dark){:root{--bg:#0d1117;--fg:#e6edf3;--mut:#8b949e;--bd:#30363d;--ac:#58a6ff}}
+  html,body{margin:0;height:100%;background:var(--bg);color:var(--fg);font:16px/1.5 system-ui,sans-serif}
+  iframe{display:block;border:0;width:100%;height:100%}
+  .box{max-width:560px;margin:0 auto;padding:48px 16px}
+  a{color:var(--ac)} li{margin:8px 0} .m{color:var(--mut)}
+</style>
+</head>
+<body>
+<div id="v"></div>
+<script>
+/* Hash router: #/<course>/<exam> loads <course>/<exam>/ (a self-contained quiz) in a full-page iframe. */
+var QUIZZES = [
+  { path: 'cs30300/midterm', title: 'CS330 OS — Midterm Trainer' }
+];
+var v = document.getElementById('v');
+function route() {
+  var h = location.hash.replace(/^#\/?/, '').replace(/\/+$/, '');
+  var q = QUIZZES.filter(function (x) { return x.path === h; })[0];
+  if (q) {
+    document.title = q.title;
+    v.innerHTML = '';
+    var f = document.createElement('iframe');
+    f.src = q.path + '/'; f.title = q.title;
+    v.style.height = '100%'; v.appendChild(f);
+    return;
+  }
+  if (!h && QUIZZES.length === 1) { location.replace('#/' + QUIZZES[0].path); return; }
+  document.title = 'Exam';
+  v.style.height = 'auto';
+  v.innerHTML = '<div class="box"><h1>Exam</h1>' + (h ? '<p class="m">Unknown quiz: ' + h.replace(/[<>&"]/g, '') + '</p>' : '') +
+    '<ul>' + QUIZZES.map(function (x) { return '<li><a href="#/' + x.path + '">' + x.title + '</a> <span class="m">#/' + x.path + '</span></li>'; }).join('') + '</ul></div>';
+}
+window.addEventListener('hashchange', route);
+route();
+</script>
+</body>
+</html>
