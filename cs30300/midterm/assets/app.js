@@ -415,9 +415,8 @@
   function startPractice() {
     let pool = filteredPool();
     if (!pool.length) { F.status = 'all'; pool = filteredPool(); }
-    // generators: repeat so a session actually contains several fresh instances
-    const exp = []; pool.forEach(q => { const n = q.t === 'gen' ? 3 : 1; for (let i = 0; i < n; i++) exp.push(q); });
-    let list = shuffle(exp);
+    // each question appears once per session (generators get a fresh instance; wrong ones return via retry)
+    let list = shuffle(pool.slice());
     if (F.smart) list.sort((a, b) => WEIGHT[statusOf(a.id)] - WEIGHT[statusOf(b.id)]);
     list = list.slice(0, F.count);
     S = { queue: list.map(q => ({ q, retry: false })), i: 0, res: [], total: list.length };
