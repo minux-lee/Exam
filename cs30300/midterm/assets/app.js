@@ -535,13 +535,14 @@
   document.addEventListener('keydown', e => {
     if (view === 'practice' && S && S.cur) {
       const c = S.cur, tag = (e.target.tagName || '').toLowerCase();
+      if (e.key === 'Enter' && e.repeat) { e.preventDefault(); return; } // held key must not skip the result
       if (e.key === 'Enter' && c.answered && tag !== 'textarea' && tag !== 'button') { const n = $('#next'); if (n) { e.preventDefault(); n.click(); } return; }
       if (c.answered || tag === 'input' || tag === 'textarea') return;
       const t = typeOf(c.q);
       if (t === 'tf' && /^[tf]$/i.test(e.key)) $(`.tfb[data-v="${e.key.toLowerCase() === 't' ? 1 : 0}"]`).click();
       if (t === 'mcq' && /^[1-9]$/.test(e.key)) { const b = $(`.opt[data-k="${+e.key - 1}"]`); if (b) b.click(); }
-      if (t === 'mcq' && e.key === 'Enter') checkNow();
-      if ((t === 'order' || t === 'match') && e.key === 'Enter') checkNow();
+      // preventDefault: checkNow moves focus to #next, and the same Enter's default action would otherwise click it
+      if ((t === 'mcq' || t === 'order' || t === 'match') && e.key === 'Enter') { e.preventDefault(); checkNow(); }
     }
   });
 
