@@ -380,6 +380,7 @@
       const st = statusOf(q.id);
       if (F.status === 'new' && st !== 'new') return false;
       if (F.status === 'weak' && st !== 'weak') return false;
+      if (F.status === 'nomaster' && st === 'mastered') return false;
       if (F.status === 'due' && !(st !== 'new' && isDue(q.id)) && st !== 'new') return false;
       return true;
     });
@@ -396,7 +397,7 @@
       const p = filteredPool(), t = tally(p);
       $('#f').innerHTML =
         chipRow('범위', Object.entries(LEC).map(([k, v]) => [+k, v.split(' ')[0]]).concat([['lab', 'KeOS quiz'], ['official', 'official sample']]), F.scope, 0) +
-        chipRow('상태', [['all', '전체'], ['due', '복습·새 문제'], ['weak', '약점'], ['new', '새 문제']], F.status, 0, false) +
+        chipRow('상태', [['all', '전체'], ['due', '복습·새 문제'], ['nomaster', 'mastered 제외'], ['weak', '약점'], ['new', '새 문제']], F.status, 0, false) +
         chipRow('문항 수', [[10, '10'], [20, '20'], [40, '40'], [9999, '전부']], F.count, 0, false) +
         chipRow('순서', [['smart', '약점 우선'], ['rand', '무작위']], F.smart ? 'smart' : 'rand', 0, false);
       $('#info').textContent = `해당 문제 ${p.length}개 (new ${t.new} · weak ${t.weak} · learning ${t.learning} · mastered ${t.mastered})`;
