@@ -61,7 +61,7 @@
 
     /* ---------- calc ---------- */
     N(5, 'fixed', 'Fixed partitions: base register = 0x2000. What is the physical address of VA 0x0362? (hex)', '2362|0x2362', 'PA = VA + base = 0x0362 + 0x2000 = 0x2362.', { ref: 'L5 p.10', lvl: 1 }),
-    N(5, 'segmentation', 'Same table with Code = RO-X and Data/Heap = RW, all valid. A program issues: (1) read 0x0100, (2) write 0x0100, (3) write 0x4200, (4) read 0x8900. How many of the four accesses fault?', 2, '(1) code read OK. (2) write to RO-X code faults. (3) seg 1 offset 0x200 < 0x400, RW, OK. (4) seg 2 offset 0x900 >= 0x800 faults. Total 2.', { ref: 'L5 p.22', lvl: 3 }),
+    N(5, 'segmentation', 'A 16-bit VA uses its top 2 bits as the segment number. Segment table (all entries valid): seg 0 Code, bound 0x800, RO-X; seg 1 Data, bound 0x400, RW; seg 2 Heap, bound 0x800, RW; seg 3 Stack, bound 0x800, RW. A program issues: (1) read 0x0100, (2) write 0x0100, (3) write 0x4200, (4) read 0x8900. How many of the four accesses fault?', 2, '(1) code read OK. (2) write to RO-X code faults. (3) seg 1 offset 0x200 < 0x400, RW, OK. (4) seg 2 offset 0x900 >= 0x800 faults. Total 2.', { ref: 'L5 p.22', lvl: 3 }),
     N(5, 'compaction', 'Three 8 KB free holes lie between allocated regions. A 20 KB segment is placed after compaction. How many KB of free space remain, in one block?', 4, 'Compaction merges 3 x 8 = 24 KB into one block; 24 - 20 = 4 KB. Before compaction no 20 KB request could fit.', { ref: 'L5 p.26', unit: 'KB', lvl: 2 }),
   ]);
 })();
