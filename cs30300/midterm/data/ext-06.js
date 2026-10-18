@@ -62,7 +62,7 @@
     ], { mode: 'recall', distract: ['Add the offset to the VPN to form the PA', 'Translate the offset through the page table too', 'If V=1, raise a page fault'],
       why: 'Only the VPN is translated. The valid bit is checked before the PFN is used; if V=0 the CPU raises a page fault instead of forming a PA (see the generated translation simulation). The offset is copied unchanged because pages and frames have the same size.',
       ref: 'L6 p.4-5', lvl: 2 }),
-    O(6, 'shared', 'Order the lines of the shared-memory example from the lecture by what each one does.', [
+    O(6, 'shared', 'The lecture\'s shared-memory example is shown below, with its lines shuffled in the answer chips. Order the chips by the order in which the lines run.\n\n```c\nint fd = shm_open("/shm1", O_CREAT | O_EXCL | O_RDWR, 0600);\nftruncate(fd, 4096);   // set shmem size\nint *p = (int *) mmap(0, 4096, PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0);\nfor (int i = 0; i < 1024; i++)  p[i] = i;\nclose(fd);\n```', [
       'shm_open creates the named object /shm1 and returns a file descriptor',
       'ftruncate sets the size of the object to 4096 bytes',
       'mmap maps the object with MAP_SHARED (PTEs start invalid; frames attach on first access)',
