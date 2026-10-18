@@ -35,8 +35,8 @@
   try { const r = localStorage.getItem(LS) || localStorage.getItem(LS_OLD); if (r) P = Object.assign(P, JSON.parse(r)); } catch (e) { /* private mode etc. */ }
   P.archive = P.archive || {};
   const activeAll = () => QZ.bank.filter(q => !P.archive[q.id]);
-  /* quiz/practice excludes essay (short) items: they live in the mock-exam pool only */
-  const active = () => activeAll().filter(q => q.t !== 'short');
+  /* quiz/practice excludes essay (short) items (they live in the mock-exam pool) except code items (KeOS) */
+  const active = () => activeAll().filter(q => q.t !== 'short' || q.kcode);
   const saveP = () => { try { localStorage.setItem(LS, JSON.stringify(P)); } catch (e) { /* ignore */ } };
   const DAY = 864e5, GAP = [0, 1, 3, 7, 14];
   function statusOf(id) {
@@ -139,7 +139,7 @@
   };
 
   H.short = {
-    render(q) { return `<div class="q">${fmt(q.q)}</div><textarea placeholder="Write your answer first (the exam is closed book). 1–3 lines is enough." aria-label="answer"></textarea>`; },
+    render(q) { return `<div class="q">${fmt(q.q)}</div><textarea${q.kcode ? ' class="codein" spellcheck="false" placeholder="Write the code or pseudocode first (closed book). Exact syntax matters less than the steps and checks."' : ' placeholder="Write your answer first (the exam is closed book). 1–3 lines is enough."'} aria-label="answer"></textarea>`; },
     read: (q, el) => $('textarea', el).value,
     restore: (q, el, ans) => { $('textarea', el).value = ans || ''; },
     grade: () => ({ res: 'pending', pts: 0 }),
@@ -296,7 +296,7 @@
 
   /* ---------- card building (shared by practice + exam) ---------- */
   function metaHTML(q) {
-    const st = statusOf(q.id), bits = [`<span class="pill">${esc(LEC[q.lec] || '')}</span>`, `<span class="pill">${TYPE[typeOf(q)]}</span>`];
+    const st = statusOf(q.id), bits = [`<span class="pill">${esc(LEC[q.lec] || '')}</span>`, `<span class="pill">${q.kcode ? '코드' : TYPE[typeOf(q)]}</span>`];
     if (q.topic) bits.push(`<span>${esc(q.topic)}</span>`);
     if (q.lab) bits.push('<span class="pill lab">KeOS quiz</span>');
     if (q.official) bits.push('<span class="pill lab">official sample</span>');
